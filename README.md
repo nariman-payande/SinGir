@@ -19,10 +19,12 @@
 
 نصب فورچی:
 دستورات زیر را کامل کپی کرده و در ترمینال سرورتان وارد و اینتر کنید
-
-
-
+.
+.
+.
+.
 git clone https://github.com/nariman-payande/ForChi.git
 cd ForChi
 chmod +x bot
 ./bot install
+
