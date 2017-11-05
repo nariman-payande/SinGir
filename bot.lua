@@ -496,7 +496,7 @@ function tdcli_update_callback(data)
 					local offlink = redis:get("botBOT-IDofflink") and "⛔️" or "✅️"
 					local nlink = redis:get("botBOT-IDlink") and "✅️" or "⛔️"
 					local contacts = redis:get("botBOT-IDsavecontacts") and "✅️" or "⛔️"
-					local txt = "⚙️  <i>وضعیت فورچی</i><code> BOT-ID</code>  ⛓\n\n"..tostring(offjoin).."<code> عضویت خودکار </code>🚀\n"..tostring(offlink).."<code> تایید لینک خودکار </code>🚦\n"..tostring(nlink).."<code> تشخیص لینک های عضویت </code>🎯\n"..tostring(contacts).."<code> افزودن خودکار مخاطبین </code>➕\n" .. tostring(autoanswer) .."<code> حالت پاسخگویی خودکار 🗣 </code>\n" .. tostring(numadd) .. "<code> افزودن مخاطب با شماره 📞 </code>\n" .. tostring(msgadd) .. "<code> افزودن مخاطب با پیام 🗞</code>\n〰〰〰ا〰〰〰\n📄<code> پیام افزودن مخاطب :</code>\n📍 " .. tostring(txtadd) .. " 📍\n〰〰〰ا〰〰〰\n\n<code>📁 لینک های ذخیره شده : </code><b>" .. tostring(links) .. "</b>\n<code>⏲	لینک های در انتظار عضویت : </code><b>" .. tostring(glinks) .. "</b>\n🕖   <b>" .. tostring(s) .. " </b><code>ثانیه تا عضویت مجدد</code>\n<code>❄️ لینک های در انتظار تایید : </code><b>" .. tostring(wlinks) .. "</b>\n🕑️   <b>" .. tostring(ss) .. " </b><code>ثانیه تا تایید لینک مجدد</code>\n\n  سازنده : @ghool"
+					local txt = "♨️  <i>وضعیت اجرایی فورچی</i><code> BOT-ID</code>  ♨️\n\n"..tostring(offjoin).."<code> عضویت خودکار </code>🚀\n"..tostring(offlink).."<code> تایید لینک خودکار </code>⚖️\n"..tostring(nlink).."<code> تشخیص لینک های عضویت </code>🖲\n"..tostring(contacts).."<code> افزودن خودکار مخاطبین </code>🔆\n" .. tostring(autoanswer) .."<code> حالت پاسخگویی خودکار 🗣 </code>\n" .. tostring(numadd) .. "<code> افزودن مخاطب با شماره ☎️ </code>\n" .. tostring(msgadd) .. "<code> افزودن مخاطب با پیام 🗞</code>\n〰〰〰ا〰〰〰\n📄<code> پیام افزودن مخاطب :</code>\n📍 " .. tostring(txtadd) .. " 📍\n〰〰〰ا〰〰〰\n\n<code>📚 لینک های ذخیره شده : </code><b>" .. tostring(links) .. "</b>\n<code>⌛️	لینک های در انتظار عضویت : </code><b>" .. tostring(glinks) .. "</b>\n⏳   <b>" .. tostring(s) .. " </b><code>ثانیه تا عضویت مجدد</code>\n<code>🕰 لینک های در انتظار تایید : </code><b>" .. tostring(wlinks) .. "</b>\n⏰   <b>" .. tostring(ss) .. " </b><code>ثانیه تا تایید لینک مجدد</code>\n\n  سازنده : @ghool"			
 					return send(msg.chat_id_, 0, txt)
 				elseif text:match("^(امار)$") or text:match("^(آمار)$") then
 					local gps = redis:scard("botBOT-IDgroups")
@@ -514,20 +514,19 @@ function tdcli_update_callback(data)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text = [[
-<i>📈 وضعیت و آمار فورچی 📊</i>
+<i>🚧 وضعیت و آمار فورچی 📉</i>
           
-<code>👤 افراد حاظر در پیوی : </code>
+<code>🗣 افراد حاظر در پیوی : </code>
 <b>]] .. tostring(usrs) .. [[</b>
-<code>👥 گپ ها : </code>
+<code>👤 گپ ها : </code>
 <b>]] .. tostring(gps) .. [[</b>
-<code>🌐 سوپر گپ ها : </code>
+<code>👥 سوپر گپ ها : </code>
 <b>]] .. tostring(sgps) .. [[</b>
-<code>📖 مخاطب های دخیره شده : </code>
+<code>🎞 مخاطب های دخیره شده : </code>
 <b>]] .. tostring(contacts)..[[</b>
-<code>📂 لینک های ذخیره شده : </code>
+<code>🗄 لینک های ذخیره شده : </code>
 <b>]] .. tostring(links)..[[</b>
-  سازنده : @ghool]]
-					return send(msg.chat_id_, 0, text)
+  سازنده : @ghool]]		return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(فور به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^فور به (.*)$")
 					local naji
