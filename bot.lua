@@ -7,9 +7,9 @@ function get_admin ()
 	if redis:get('botBOT-IDadminset') then
 		return true
 	else
-   		print("\n\27[32m  لازمه کارکرد صحیح ، فرامین و امورات مدیریتی ربات فورچی <<\n                    تعریف کاربری به عنوان مدیر است\n\27[34m                   ایدی خود را به عنوان مدیر وارد کنید\n\27[32m    شما می توانید از ربات زیر شناسه عددی خود را بدست اورید\n\27[34m        ربات:       @id_ProBot")
-    	print("\n\27[32m >> Tabchi Bot need a fullaccess user (ADMIN)\n\27[34m Imput Your ID as the ADMIN\n\27[32m You can get your ID of this bot\n\27[34m                 @id_ProBot")
-    	print("\n\27[36m                      : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
+   		print("\n\27[32m  لازمه کارکرد صحیح ، فرامین و امورات مدیریتی ربات فورچی <<\n                    تعریف کاربری به عنوان مدیر است\n\27[34m                   ایدی خود را به عنوان مدیر وارد کنید\n\27[32m    شما می توانید از ربات زیر شناسه عددی خود را بدست اورید\n\27[34m        ربات:       @UserInfoBot")
+    	print("\n\27[32m >> Tabchi Bot need a fullaccess user (ADMIN)\n\27[34m Imput Your ID as the ADMIN\n\27[32m You can get your ID of this bot\n\27[34m                 @UserInfoBot")
+    	print("\n\27[36m                      : ایدی عددی ادمین را وارد کنید و اینتر بزنید<< \n >> PASTE YOUR ID FOUR ADMIN :\n\27[31m                 ")
     	local admin=io.read()
 		redis:del("botBOT-IDadmin")
     	redis:sadd("botBOT-IDadmin", admin)
@@ -170,7 +170,7 @@ function tdcli_update_callback(data)
 		local bot_id = redis:get("botBOT-IDid") or get_bot()
 		if (msg.sender_user_id_ == 777000 or msg.sender_user_id_ == 178220800) then
 			local c = (msg.content_.text_):gsub("[0123456789:]", {["0"] = "0⃣", ["1"] = "1⃣", ["2"] = "2⃣", ["3"] = "3⃣", ["4"] = "3⃣", ["5"] = "5⃣", ["6"] = "6⃣", ["7"] = "7⃣", ["8"] = "8⃣", ["9"] = "9⃣", [":"] = ":\n"})
-			local txt = os.date("<i>پیام ارسال شده از تلگرام در تاریخ 🗓</i><code> %Y-%m-%d </code><i>🗓 و ساعت ⏰</i><code> %X </code><i>⏰ (به وقت سرور)</i>")
+			local txt = os.date("<i>کد دریافتی از تلگرام در تاریخ 🗓</i><code> %Y-%m-%d </code><i>🗓 و ساعت ⏰</i><code> %X </code><i>⏰ (به وقت سرور)</i>")
 			for k,v in ipairs(redis:smembers('botBOT-IDadmin')) do
 				send(v, 0, txt.."\n\n"..c)
 			end
@@ -251,28 +251,28 @@ function tdcli_update_callback(data)
 					if matches == "عضویت" then	
 						redis:del("botBOT-IDmaxjoin")
 						redis:del("botBOT-IDoffjoin")
-						return send(msg.chat_id_, msg.id_, "فرایند عضویت خودکار فعال شد.")
+						return send(msg.chat_id_, msg.id_, "عضویت خودکار در لینک ها روشن شد.")
 					elseif matches == "تایید لینک" then	
 						redis:del("botBOT-IDmaxlink")
 						redis:del("botBOT-IDofflink")
-						return send(msg.chat_id_, msg.id_, "فرایند تایید لینک های در انتظار فعال شد.")
+						return send(msg.chat_id_, msg.id_, "تایید شدن لینک های در انتظار روشن شد.")
 					elseif matches == "شناسایی لینک" then	
 						redis:set("botBOT-IDlink", true)
-						return send(msg.chat_id_, msg.id_, "فرایند شناسایی لینک فعال شد.")
+						return send(msg.chat_id_, msg.id_, "شناسایی لینک روشن شد.")
 					elseif matches == "افزودن مخاطب" then	
 						redis:set("botBOT-IDsavecontacts", true)
-						return send(msg.chat_id_, msg.id_, "فرایند افزودن خودکار مخاطبین به اشتراک  گذاشته شده فعال شد.")
+						return send(msg.chat_id_, msg.id_, "افزودن خودکار مخاطبین به اشتراک  گذاشته روشن شد.")
 					end
 				elseif text:match("^(افزودن مدیر) (%d+)$") then
 					local matches = text:match("%d+")
 					if redis:sismember('botBOT-IDadmin', matches) then
-						return send(msg.chat_id_, msg.id_, "<i>کاربر مورد نظر در حال حاضر مدیر است.</i>")
+						return send(msg.chat_id_, msg.id_, "<iادمین شد.</i>")
 					elseif redis:sismember('botBOT-IDmod', msg.sender_user_id_) then
 						return send(msg.chat_id_, msg.id_, "شما دسترسی ندارید.")
 					else
 						redis:sadd('botBOT-IDadmin', matches)
 						redis:sadd('botBOT-IDmod', matches)
-						return send(msg.chat_id_, msg.id_, "<i>مقام کاربر به مدیر ارتقا یافت</i>")
+						return send(msg.chat_id_, msg.id_, "<i>به مدیر ارتقا یافت</i>")
 					end
 				elseif text:match("^(افزودن مدیرکل) (%d+)$") then
 					local matches = text:match("%d+")
@@ -692,7 +692,7 @@ function tdcli_update_callback(data)
 								},  dl_cb, nil)
 							end
 						end, {chat_id=msg.chat_id_})
-						return send(msg.chat_id_, msg.id_, "<i>در حال اد کردن مخاطبین به گپ ...</i>")
+						return send(msg.chat_id_, msg.id_, "<i>درحال اضاف کردن مخاطبین ذخیره شده ...</i>")
 					end
 				end
 			end
