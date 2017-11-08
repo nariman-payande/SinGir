@@ -117,7 +117,7 @@ clear() {
   read -rp ' ' ID
   rm -rf ~/.telegram-cli/bot-"$ID"/data
   rm -rf bot-"$ID".lua
-  redis-cli --raw keys "bot"$ID* | xargs redis-cli del
+  redis-cli --raw keys "robot"$ID* | xargs redis-cli del
   prtgrn '
      bot number '$ID' Deleted <<
   >> Bot number '$ID' seccessfuly deleted.
@@ -245,10 +245,10 @@ case $1 in
   ;;
   a*)
     id="${1/a/}"
-    if [ -a "$THIS_DIR"/bot-"$id".lua ]; then
-      screen -x -s bot-"$id" quit
+    if [ -a "$THIS_DIR"/robot-"$id".lua ]; then
+      screen -x -s robot-"$id" quit
       while true ; do
-        screen -s bot-"$id" ./telegram-cli -p bot-"$id" -s bot-"$id".lua
+        screen -s robot-"$id" ./telegram-cli -p robot-"$id" -s robot-"$id".lua
         sleep 10
       done
     else
@@ -259,8 +259,8 @@ case $1 in
     clear
   ;;
   *)
-    if [ -a "$THIS_DIR"/bot-"$1".lua ]; then
-      ./telegram-cli -p bot-"$1" -s bot-"$1".lua
+    if [ -a "$THIS_DIR"/robot-"$1".lua ]; then
+      ./telegram-cli -p robot-"$1" -s robot-"$1".lua
     else
     usage
     fi
