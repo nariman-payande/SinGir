@@ -17,17 +17,17 @@ function get_admin ()
     	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
 	end
 end
-function get_bot (i, naji)
-	function bot_info (i, naji)
-		redis:set("botBOT-IDid",naji.id_)
-		if naji.first_name_ then
-			redis:set("botBOT-IDfname",naji.first_name_)
+function get_bot (i,forchi)
+	function bot_info (i,forchi)
+		redis:set("botBOT-IDid",forchi.id_)
+		if forchi.first_name_ then
+			redis:set("botBOT-IDfname",forchi.first_name_)
 		end
 		if naji.last_name_ then
-			redis:set("botBOT-IDlanme",naji.last_name_)
+			redis:set("botBOT-IDlanme",forchi.last_name_)
 		end
-		redis:set("botBOT-IDnum",naji.phone_number_)
-		return naji.id_
+		redis:set("botBOT-IDnum",forchi.phone_number_)
+		return forchi.id_
 	end
 	tdcli_function ({ID = "GetMe",}, bot_info, nil)
 end
@@ -35,11 +35,11 @@ function reload(chat_id,msg_id)
 	loadfile("./bot-BOT-ID.lua")()
 	send(chat_id, msg_id, "<i>با موفقیت انجام شد.</i>")
 end
-function is_naji(msg)
+function is_forchi(msg)
     local var = false
 	local hash = 'botBOT-IDadmin'
 	local user = msg.sender_user_id_
-    local Naji = redis:sismember(hash, user)
+    local forchi = redis:sismember(hash, user)
 	if Naji then
 		var = true
 	end
@@ -52,7 +52,7 @@ function writefile(filename, input)
 	file:close()
 	return true
 end
-function process_join(i, naji)
+function process_join(i, forchi)
 	if naji.code_ == 429 then
 		local message = tostring(naji.message_)
 		local Time = message:match('%d+') + 85
