@@ -191,7 +191,7 @@ function tdcli_update_callback(data)
 			if redis:get("botBOT-IDlink") then
 				find_link(text)
 			end
-			if is_naji(msg) then
+			if is_forchi(msg) then
 				find_link(text)
 				if text:match("^(حذف لینک) (.*)$") then
 					local matches = text:match("^حذف لینک (.*)$")
