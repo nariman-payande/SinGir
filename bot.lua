@@ -54,7 +54,7 @@ function writefile(filename, input)
 end
 function process_join(i, forchi)
 	if naji.code_ == 429 then
-		local message = tostring(naji.message_)
+		local message = tostring(forchi.message_)
 		local Time = message:match('%d+') + 85
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
@@ -62,12 +62,12 @@ function process_join(i, forchi)
 		redis:sadd("botBOT-IDsavedlinks", i.link)
 	end
 end
-function process_link(i, naji)
-	if (naji.is_group_ or naji.is_supergroup_channel_) then
+function process_link(i, forchi)
+	if (naji.is_group_ or forchi.is_supergroup_channel_) then
 		redis:srem("botBOT-IDwaitelinks", i.link)
 		redis:sadd("botBOT-IDgoodlinks", i.link)
 	elseif naji.code_ == 429 then
-		local message = tostring(naji.message_)
+		local message = tostring(forchi.message_)
 		local Time = message:match('%d+') + 85
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
