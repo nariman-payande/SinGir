@@ -63,7 +63,7 @@ function process_join(i, forchi)
 	end
 end
 function process_link(i, forchi)
-	if (naji.is_group_ or forchi.is_supergroup_channel_) then
+	if (forchi.is_group_ or forchi.is_supergroup_channel_) then
 		redis:srem("botBOT-IDwaitelinks", i.link)
 		redis:sadd("botBOT-IDgoodlinks", i.link)
 	elseif naji.code_ == 429 then
@@ -336,18 +336,18 @@ function tdcli_update_callback(data)
 					return send(msg.chat_id_, msg.id_, "<b>همگام سازی اطلاعات با فورچی شماره</b><code> "..tostring(botid).." </code><b>انجام شد.</b>")
 				elseif text:match("^(لیست) (.*)$") then
 					local matches = text:match("^لیست (.*)$")
-					local naji
+					local forchi
 					if matches == "مخاطبین" then
 						return tdcli_function({
 							ID = "SearchContacts",
 							query_ = nil,
 							limit_ = 999999999
 						},
-						function (I, Naji)
-							local count = Naji.total_count_
+						function (I, forchi)
+							local count = forchi.total_count_
 							local text = "مخاطب ها : \n"
 							for i =0 , tonumber(count) - 1 do
-								local user = Naji.users_[i]
+								local user = forchi.users_[i]
 								local firstname = user.first_name_ or ""
 								local lastname = user.last_name_ or ""
 								local fullname = firstname .. " " .. lastname
@@ -377,26 +377,26 @@ function tdcli_update_callback(data)
 						if redis:scard('botBOT-IDanswerslist') == 0  then text = "<code>       EMPTY</code>" end
 						return send(msg.chat_id_, msg.id_, text)
 					elseif matches == "مسدود" then
-						naji = "botBOT-IDblockedusers"
+						forchi = "botBOT-IDblockedusers"
 					elseif matches == "پیوی" then
-						naji = "botBOT-IDusers"
+						forchi = "botBOT-IDusers"
 					elseif matches == "گپ" then
-						naji = "botBOT-IDgroups"
+						forchi = "botBOT-IDgroups"
 					elseif matches == "سوپرگپ" then
-						naji = "botBOT-IDsupergroups"
+						forchi = "botBOT-IDsupergroups"
 					elseif matches == "لینک" then
-						naji = "botBOT-IDsavedlinks"
+						forchi = "botBOT-IDsavedlinks"
 					elseif matches == "مدیر" then
-						naji = "botBOT-IDadmin"
+						forchi = "botBOT-IDadmin"
 					else
 						return true
 					end
-					local list =  redis:smembers(naji)
+					local list =  redis:smembers(forchi)
 					local text = tostring(matches).." : \n"
 					for i, v in pairs(list) do
 						text = tostring(text) .. tostring(i) .. "-  " .. tostring(v).."\n"
 					end
-					writefile(tostring(naji)..".txt", text)
+					writefile(tostring(forchi)..".txt", text)
 					tdcli_function ({
 						ID = "SendMessage",
 						chat_id_ = msg.chat_id_,
@@ -409,7 +409,7 @@ function tdcli_update_callback(data)
 							path_ = tostring(naji)..".txt"},
 						caption_ = "لیست "..tostring(matches).." های فورچی شماره BOT-ID"}
 					}, dl_cb, nil)
-					return io.popen("rm -rf "..tostring(naji)..".txt"):read("*all")
+					return io.popen("rm -rf "..tostring(forchi)..".txt"):read("*all")
 				elseif text:match("^(وضعیت مشاهده) (.*)$") then
 					local matches = text:match("^وضعیت مشاهده (.*)$")
 					if matches == "روشن" then
@@ -466,8 +466,8 @@ function tdcli_update_callback(data)
 						ID = "SearchContacts",
 						query_ = nil,
 						limit_ = 999999999
-					}, function (i, naji)
-						redis:set("botBOT-IDcontacts", naji.total_count_)
+					}, function (i, forchi)
+						redis:set("botBOT-IDcontacts", forchi.total_count_)
 					end, nil)
 					for i, v in ipairs(list) do
 							for a, b in ipairs(v) do 
@@ -475,8 +475,8 @@ function tdcli_update_callback(data)
 									ID = "GetChatMember",
 									chat_id_ = b,
 									user_id_ = bot_id
-								}, function (i,naji)
-									if  naji.ID == "Error" then rem(i.id) 
+								}, function (i,forchi)
+									if  forchi.ID == "Error" then rem(i.id) 
 									end
 								end, {id=b})
 							end
@@ -509,8 +509,8 @@ function tdcli_update_callback(data)
 						ID = "SearchContacts",
 						query_ = nil,
 						limit_ = 999999999
-					}, function (i, naji)
-					redis:set("botBOT-IDcontacts", naji.total_count_)
+					}, function (i, forchi)
+					redis:set("botBOT-IDcontacts", forchi.total_count_)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text = [[
@@ -530,13 +530,13 @@ function tdcli_update_callback(data)
 					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(فور به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^فور به (.*)$")
-					local naji
+					local forchi
 					if matches:match("^(پیوی)") then
-						naji = "botBOT-IDusers"
+						forchi = "botBOT-IDusers"
 					elseif matches:match("^(گپ)$") then
-						naji = "botBOT-IDgroups"
+						forchi = "botBOT-IDgroups"
 					elseif matches:match("^(سوپرگپ)$") then
-						naji = "botBOT-IDsupergroups"
+						forchi = "botBOT-IDsupergroups"
 					else
 						return true
 					end
@@ -673,13 +673,13 @@ function tdcli_update_callback(data)
 							ID = "SearchContacts",
 							query_ = nil,
 							limit_ = 999999999
-						},function(i, naji)
-							local users, count = redis:smembers("botBOT-IDusers"), naji.total_count_
+						},function(i, forchi)
+							local users, count = redis:smembers("botBOT-IDusers"), forchi.total_count_
 							for n=0, tonumber(count) - 1 do
 								tdcli_function ({
 									ID = "AddChatMember",
 									chat_id_ = i.chat_id,
-									user_id_ = naji.users_[n].id_,
+									user_id_ = forchi.users_[n].id_,
 									forward_limit_ = 50
 								},  dl_cb, nil)
 							end
