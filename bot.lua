@@ -23,7 +23,7 @@ function get_bot (i,forchi)
 		if forchi.first_name_ then
 			redis:set("botBOT-IDfname",forchi.first_name_)
 		end
-		if naji.last_name_ then
+		if forchi.last_name_ then
 			redis:set("botBOT-IDlanme",forchi.last_name_)
 		end
 		redis:set("botBOT-IDnum",forchi.phone_number_)
