@@ -17,8 +17,8 @@ function get_admin ()
     	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
 	end
 end
-function get_bot (i,forchi)
-	function bot_info (i,forchi)
+function get_bot (forchi)
+	function bot_info (forchi)
 		redis:set("botBOT-IDid",forchi.id_)
 		if forchi.first_name_ then
 			redis:set("botBOT-IDfname",forchi.first_name_)
@@ -62,7 +62,7 @@ function process_join(i, forchi)
 		redis:sadd("botBOT-IDsavedlinks", i.link)
 	end
 end
-function process_link(i, forchi)
+function process_link(forchi)
 	if (forchi.is_group_ or forchi.is_supergroup_channel_) then
 		redis:srem("botBOT-IDwaitelinks", i.link)
 		redis:sadd("botBOT-IDgoodlinks", i.link)
@@ -466,7 +466,7 @@ function tdcli_update_callback(data)
 						ID = "SearchContacts",
 						query_ = nil,
 						limit_ = 999999999
-					}, function (i, forchi)
+					}, function (forchi)
 						redis:set("botBOT-IDcontacts", forchi.total_count_)
 					end, nil)
 					for i, v in ipairs(list) do
@@ -475,7 +475,7 @@ function tdcli_update_callback(data)
 									ID = "GetChatMember",
 									chat_id_ = b,
 									user_id_ = bot_id
-								}, function (i,forchi)
+								}, function (forchi)
 									if  forchi.ID == "Error" then rem(i.id) 
 									end
 								end, {id=b})
@@ -509,7 +509,7 @@ function tdcli_update_callback(data)
 						ID = "SearchContacts",
 						query_ = nil,
 						limit_ = 999999999
-					}, function (i, forchi)
+					}, function (forchi)
 					redis:set("botBOT-IDcontacts", forchi.total_count_)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
@@ -540,7 +540,7 @@ function tdcli_update_callback(data)
 					else
 						return true
 					end
-					local list = redis:smembers(naji)
+					local list = redis:smembers(forchi)
 					local id = msg.reply_to_message_id_
 					for i, v in pairs(list) do
 						tdcli_function({
