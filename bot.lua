@@ -19,7 +19,7 @@ function get_admin ()
 end
 function get_bot (ghool)
 	function bot_info (ghool)
-	redis:set("botBOT-IDid",ghool.id_)
+	redis:set("botBOT-IDid",bot.id_)
 		if forchi.first_name_ then
 			redis:set("botBOT-IDfname",ghool.first_name_)
 		end
