@@ -747,7 +747,7 @@ function tdcli_update_callback(data)
 				end
 			end
 			if redis:get("botBOT-IDaddmsg") then
-				local answer = redis:get("botBOT-IDaddmsgtext") or "ادی بیا پیوی"
+				local answer = redis:get("botBOT-IDaddmsgtext") or "اددی گلم خصوصی پیام بده"
 				send(msg.chat_id_, msg.id_, answer)
 			end
 		elseif msg.content_.ID == "MessageChatDeleteMember" and msg.content_.id_ == bot_id then
