@@ -17,17 +17,17 @@ function get_admin ()
     	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
 	end
 end
-function get_bot (ghool)
-	function bot_info (ghool)
+function get_bot (naji)
+	function bot_info (naji)
 	redis:set("botBOT-IDid",bot.id_)
 		if forchi.first_name_ then
-			redis:set("botBOT-IDfname",ghool.first_name_)
+			redis:set("botBOT-IDfname",naji.first_name_)
 		end
 		if forchi.last_name_ then
-			redis:set("botBOT-IDlanme",ghool.last_name_)
+			redis:set("botBOT-IDlanme",naji.last_name_)
 		end
-		redis:set("botBOT-IDnum",ghool.phone_number_)
-		return ghool.id_
+		redis:set("botBOT-IDnum",naji.phone_number_)
+		return naji.id_
 	end
 	tdcli_function ({ID = "GetMe",}, bot_info, nil)
 end
@@ -35,12 +35,12 @@ function reload(chat_id,msg_id)
 	loadfile("./bot-BOT-ID.lua")()
 	send(chat_id, msg_id, "<i>با موفقیت انجام شد.</i>")
 end
-function is_ghool(msg)
+function is_naji(msg)
     local var = false
 	local hash = 'botBOT-IDadmin'
 	local user = msg.sender_user_id_
     local forchi = redis:sismember(hash, user)
-	if ghool then
+	if naji then
 		var = true
 	end
 	return var
@@ -52,9 +52,9 @@ function writefile(filename, input)
 	file:close()
 	return true
 end
-function process_join(i, ghool)
+function process_join(i, naji)
 	if naji.code_ == 429 then
-		local message = tostring(ghool.message_)
+		local message = tostring(naji.message_)
 		local Time = message:match('%d+') + 85
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
@@ -62,12 +62,12 @@ function process_join(i, ghool)
 		redis:sadd("botBOT-IDsavedlinks", i.link)
 	end
 end
-function process_link(ghool)
-	if (forchi.is_group_ or ghool.is_supergroup_channel_) then
+function process_link(naji)
+	if (forchi.is_group_ or naji.is_supergroup_channel_) then
 		redis:srem("botBOT-IDwaitelinks", i.link)
 		redis:sadd("botBOT-IDgoodlinks", i.link)
 	elseif naji.code_ == 429 then
-		local message = tostring(ghool.message_)
+		local message = tostring(naji.message_)
 		local Time = message:match('%d+') + 85
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
@@ -191,7 +191,7 @@ function tdcli_update_callback(data)
 			if redis:get("botBOT-IDlink") then
 				find_link(text)
 			end
-			if is_ghool(msg) then
+			if is_naji(msg) then
 				find_link(text)
 				if text:match("^(حذف لینک) (.*)$") then
 					local matches = text:match("^حذف لینک (.*)$")
@@ -343,11 +343,11 @@ function tdcli_update_callback(data)
 							query_ = nil,
 							limit_ = 999999999
 						},
-						function (I, ghool)
-							local count = ghool.total_count_
+						function (I, naji)
+							local count = naji.total_count_
 							local text = "مخاطب ها : \n"
 							for i =0 , tonumber(count) - 1 do
-								local user = ghool.users_[i]
+								local user = naji.users_[i]
 								local firstname = user.first_name_ or ""
 								local lastname = user.last_name_ or ""
 								local fullname = firstname .. " " .. lastname
@@ -377,26 +377,26 @@ function tdcli_update_callback(data)
 						if redis:scard('botBOT-IDanswerslist') == 0  then text = "<code>       EMPTY</code>" end
 						return send(msg.chat_id_, msg.id_, text)
 					elseif matches == "مسدود" then
-						ghool = "botBOT-IDblockedusers"
+						naji = "botBOT-IDblockedusers"
 					elseif matches == "پیوی" then
-						ghool = "botBOT-IDusers"
+						naji = "botBOT-IDusers"
 					elseif matches == "گپ" then
-						ghool = "botBOT-IDgroups"
+						naji = "botBOT-IDgroups"
 					elseif matches == "سوپرگپ" then
-						ghool = "botBOT-IDsupergroups"
+						naji = "botBOT-IDsupergroups"
 					elseif matches == "لینک" then
-						ghool = "botBOT-IDsavedlinks"
+						naji = "botBOT-IDsavedlinks"
 					elseif matches == "مدیر" then
-						ghool = "botBOT-IDadmin"
+						naji = "botBOT-IDadmin"
 					else
 						return true
 					end
-					local list =  redis:smembers(ghool)
+					local list =  redis:smembers(naji)
 					local text = tostring(matches).." : \n"
 					for i, v in pairs(list) do
 						text = tostring(text) .. tostring(i) .. "-  " .. tostring(v).."\n"
 					end
-					writefile(tostring(ghool)..".txt", text)
+					writefile(tostring(naji)..".txt", text)
 					tdcli_function ({
 						ID = "SendMessage",
 						chat_id_ = msg.chat_id_,
@@ -406,10 +406,10 @@ function tdcli_update_callback(data)
 						reply_markup_ = nil,
 						input_message_content_ = {ID = "InputMessageDocument",
 							document_ = {ID = "InputFileLocal",
-							path_ = tostring(ghool)..".txt"},
+							path_ = tostring(naji)..".txt"},
 						caption_ = "لیست "..tostring(matches).." های فورچی شماره BOT-ID"}
 					}, dl_cb, nil)
-					return io.popen("rm -rf "..tostring(ghool)..".txt"):read("*all")
+					return io.popen("rm -rf "..tostring(naji)..".txt"):read("*all")
 				elseif text:match("^(وضعیت مشاهده) (.*)$") then
 					local matches = text:match("^وضعیت مشاهده (.*)$")
 					if matches == "روشن" then
@@ -467,7 +467,7 @@ function tdcli_update_callback(data)
 						query_ = nil,
 						limit_ = 999999999
 					}, function (forchi)
-						redis:set("botBOT-IDcontacts", ghool.total_count_)
+						redis:set("botBOT-IDcontacts", naji.total_count_)
 					end, nil)
 					for i, v in ipairs(list) do
 							for a, b in ipairs(v) do 
@@ -509,8 +509,8 @@ function tdcli_update_callback(data)
 						ID = "SearchContacts",
 						query_ = nil,
 						limit_ = 999999999
-					}, function (ghool)
-					redis:set("botBOT-IDcontacts", ghool.total_count_)
+					}, function (naji)
+					redis:set("botBOT-IDcontacts", naji.total_count_)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text = [[
@@ -530,13 +530,13 @@ function tdcli_update_callback(data)
 					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(فور به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^فور به (.*)$")
-					local ghool
+					local naji
 					if matches:match("^(پیوی)") then
-						ghool = "botBOT-IDusers"
+						naji = "botBOT-IDusers"
 					elseif matches:match("^(گپ)$") then
-						ghool = "botBOT-IDgroups"
+						naji = "botBOT-IDgroups"
 					elseif matches:match("^(سوپرگپ)$") then
-						ghool = "botBOT-IDsupergroups"
+						naji = "botBOT-IDsupergroups"
 					else
 						return true
 					end
@@ -673,13 +673,13 @@ function tdcli_update_callback(data)
 							ID = "SearchContacts",
 							query_ = nil,
 							limit_ = 999999999
-						},function(i, ghool)
-							local users, count = redis:smembers("botBOT-IDusers"), ghool.total_count_
+						},function(i, naji)
+							local users, count = redis:smembers("botBOT-IDusers"), naji.total_count_
 							for n=0, tonumber(count) - 1 do
 								tdcli_function ({
 									ID = "AddChatMember",
 									chat_id_ = i.chat_id,
-									user_id_ = ghool.users_[n].id_,
+									user_id_ = naji.users_[n].id_,
 									forward_limit_ = 50
 								},  dl_cb, nil)
 							end
