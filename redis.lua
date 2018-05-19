@@ -1,7 +1,7 @@
 local redis = {
-    _VERSION     = 'redis-lua 2.0.4',
+    _VERSION     = 'redis-lua 2.0.5',
     _DESCRIPTION = 'A Lua client library for the redis key value storage system.',
-    _COPYRIGHT   = 'Copyright (C) 2009-2012 Daniele Alessandri',
+    _COPYRIGHT   = 'Copyright (C) 2017-2018 NARIMAN PAYANDE',
 }
 
 -- The following line is used for backwards compatibility in order to keep the `Redis`
